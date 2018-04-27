@@ -7,10 +7,12 @@ import random
 import sys
 import struct
 
+myname = socket.getfqdn(socket.gethostname())
+host_ip = socket.gethostbyname(myname)
+
 server_ip_port=("192.168.199.211",16337)
-host_ip="192.168.199.211"
-client_ip_port=(socket.gethostname(),12345)
-client_s_ip_port=[(socket.gethostname(),i+12346) for i in range(10)]
+client_ip_port=(host_ip,12345)
+client_s_ip_port=[(host_ip,i+12346) for i in range(10)]
 data_out_port=12320
 lock=threading.Lock()
 exitflag=1
