@@ -7,8 +7,7 @@ import random
 import sys
 import struct
 
-myname = socket.getfqdn(socket.gethostname())
-host_ip = socket.gethostbyname(myname)
+host_ip = "192.168.199.211"
 
 server_ip_port=("192.168.199.211",16337)
 client_ip_port=(host_ip,12345)
@@ -27,7 +26,7 @@ def key_gen():
 
 def INIT():
 	main_s=socket.socket()
-	main_s.bind(client_ip_port)
+	# main_s.bind(client_ip_port)
 	flag=1
 	i=0
 	while i<3 and flag:
@@ -55,7 +54,7 @@ def INIT():
 
 def get_file(filename):
 	main_s=socket.socket()
-	main_s.bind(client_ip_port)
+	# main_s.bind(client_ip_port)
 	main_s.connect(server_ip_port)
 	print("Connect Success")
 	request="GET "+str(filename)
@@ -126,7 +125,7 @@ def get_file_client(filename,addr,part,id):
 	client_s.connect(addr)
 	print("Connect Success ",str(addr))
 	client_s.send(("DOWNLOAD "+filename+" "+str(part)).encode())
-	print(part)
+	# print(part)
 	file_temp_name=key_gen()+".bin"
 	print(file_temp_name,str(id))
 	lock.acquire()
@@ -169,7 +168,7 @@ def send_file(coon,filename,part):
 		else:
 			pack=struct.pack("!3H%ds"%len(data),1,i,len(data),data)
 		coon.send(pack)
-	print("My work is done")
+	# print("My work is done")
 	file.close()
 	return 
 		
@@ -177,7 +176,7 @@ def send_file(coon,filename,part):
 
 def add_file(filename,filesize):
 	main_s=socket.socket()
-	main_s.bind(client_ip_port)
+	# main_s.bind(client_ip_port)
 	main_s.connect(server_ip_port)
 	main_s.send(("ADD "+filename+" "+str(filesize)).encode())
 	response=main_s.recv(1024).decode()
@@ -187,10 +186,11 @@ def Quit():
 	lock.acquire()
 	global exitflag
 	main_s=socket.socket()
-	main_s.bind(client_ip_port)
+	# main_s.bind(client_ip_port)
 	main_s.connect(server_ip_port)
 	main_s.send(("QUIT").encode())
 	exitflag=0
+	main_s.close()
 	print("I am going to die")
 	lock.release()
 	os._exit(0)
